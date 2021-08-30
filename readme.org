@@ -1,0 +1,22 @@
+* DataCache project
+Project for data caching around application:
+  
+** Analysis
+Cache Optimisation depends on multiple levels. 
+It can be a simpler thing like reducing seek time from network to disk to RAM.
+It can be challenging like anticipating future data use, especially for naturally random inputs. 
+
+Done better, Cache improves performance (cache-hit vs cache-miss). 
+Client-Server apps, especially with huge read/write requests on shared data poses such an opportunity e.g. social networking apps, stock trading, multi-player online games etc
+This opportunity of solving this scalability of read/write using advanced caching will be focus of this project.
+
+** Design
+*** reduce seek time by caching network files to 1. RAM and 2. disk 
+*** anticipate future usage by observing usage history to generate 'cache priority index' 
+    calculated using multiple indicators like access count, last accessed, first accessed, etc
+*** pluggable - adapter on network access, file access; cache priority index. 
+*** quick access using dictionary (of unique key, object value). Can be later optimized to file with saved indexes.
+*** test driven development needs a way to measure cache performance, for tests, for comparing: use mocking, etc 
+
+** Project Backlog Index
+*** 
