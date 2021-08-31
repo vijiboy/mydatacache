@@ -22,4 +22,5 @@ This opportunity of optimising high volume read/write using advanced caching wil
 
 ** Product Backlog Item
 *** similar to whatsapp user list or twitter follower/following list: stream line 500 user profiles containing info text, small photo and a big photo.
-**** 
+**** absorb network issues (speed, connection time-outs, re-connected) using caching
+**** app. close and re-open shall resume its cache by persisting on disk
