@@ -4,7 +4,7 @@ Project for data caching around application
 ** Analysis
 Cache Optimisation depends on multiple levels. 
 It can be a simpler thing like reducing seek time from network to disk to RAM.
-It can be challenging like anticipating future data use, especially for naturally random inputs. 
+It can be challenging like anticipating future data use, especially for naturally random data needs. 
 
 Done better, Cache improves performance (cache-hit vs cache-miss). 
 Client-Server apps, especially with huge read/write requests on shared data poses such an opportunity e.g. social networking apps, stock trading, multi-player online games etc
@@ -16,7 +16,7 @@ This opportunity of solving this scalability of read/write using advanced cachin
     calculated using multiple indicators like access count, last accessed, first accessed, etc.
 *** Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
 *** Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
-*** Pluggable design can help clean seperation  e.g. adapter on network & file access classes.
+*** Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
 
 ** Product Backlog Item
 *** 
