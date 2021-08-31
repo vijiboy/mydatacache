@@ -12,15 +12,14 @@ This opportunity of optimising high volume read/write using advanced caching wil
 
 
 ** Design
-*** Reduce seek time by caching network files to 1. RAM and 2. disk
-*** Cache Priority Index: anticipate future usage by observing usage history to generate 'cache priority index' 
-    calculated using multiple indicators like access count, last accessed, first accessed, etc.
-*** Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
-*** Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
-*** Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
+- Reduce seek time by caching network files to 1. RAM and 2. disk
+- Cache Priority Index: anticipate future usage by observing usage history to generate 'cache priority index', calculated using multiple indicators like access count, last accessed, first accessed, etc.
+- Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
+- Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
+- Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
 
 
 ** Product Backlog Item
-*** similar to whatsapp user list or twitter follower/following list: stream line 500 user profiles containing info text, small photo and a big photo.
-**** absorb network issues (speed, connection time-outs, re-connected) using caching
-**** app. close and re-open shall resume its cache by persisting on disk
+*** Similar to whatsapp user list or twitter follower/following list: stream line 500 user profiles containing info text, small photo and a big photo.
+**** Absorb network issues (speed, connection time-outs, re-connected) using caching
+**** App. close and re-open shall resume its cache by persisting on disk
