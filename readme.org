@@ -11,12 +11,12 @@ Client-Server apps, especially with huge read/write requests on shared data pose
 This opportunity of solving this scalability of read/write using advanced caching will be focus of this project.
 
 ** Design
-*** reduce seek time by caching network files to 1. RAM and 2. disk 
-*** anticipate future usage by observing usage history to generate 'cache priority index' 
-    calculated using multiple indicators like access count, last accessed, first accessed, etc
-*** pluggable - adapter on network access, file access; cache priority index. 
-*** quick access using dictionary (of unique key, object value). Can be later optimized to file with saved indexes.
-*** test driven development needs a way to measure cache performance, for tests, for comparing: use mocking, etc 
+*** Reduce seek time by caching network files to 1. RAM and 2. disk
+*** Cache Priority Index: anticipate future usage by observing usage history to generate 'cache priority index' 
+    calculated using multiple indicators like access count, last accessed, first accessed, etc.
+*** Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
+*** Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
+*** Pluggable design can help clean seperation  e.g. adapter on network & file access classes.
 
 ** Product Backlog Item
 *** 
