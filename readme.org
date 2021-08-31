@@ -1,5 +1,5 @@
 * DataCache project
-Project for data caching around application:
+Project for data caching around application
   
 ** Analysis
 Cache Optimisation depends on multiple levels. 
