@@ -8,15 +8,18 @@ It can be challenging like anticipating future data use, especially for naturall
 
 Done better, Cache improves performance (cache-hit vs cache-miss). 
 Client-Server apps, especially with huge read/write requests on shared data poses such an opportunity e.g. social networking apps, stock trading, multi-player online games etc
-This opportunity of solving this scalability of read/write using advanced caching will be focus of this project.
+This opportunity of optimising high volume read/write using advanced caching will be focus of this project.
+
 
 ** Design
 *** Reduce seek time by caching network files to 1. RAM and 2. disk
 *** Cache Priority Index: anticipate future usage by observing usage history to generate 'cache priority index' 
     calculated using multiple indicators like access count, last accessed, first accessed, etc.
 *** Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
-*** Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
 *** Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
+*** Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
+
 
 ** Product Backlog Item
-*** 
+*** similar to whatsapp user list or twitter follower/following list: stream line 500 user profiles containing info text, small photo and a big photo.
+**** 
