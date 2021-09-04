@@ -15,8 +15,23 @@ This opportunity of optimising high volume read/write using advanced caching wil
 - Reduce seek time by caching network files to 1. RAM and 2. disk
 - Cache Priority Index: anticipate future usage by observing usage history to generate 'cache priority index', calculated using multiple indicators like access count, last accessed, first accessed, etc.
 - Dictionary will provide quick access to cached items. Can be later optimized to file with saved indexes.
-- Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
 - Test Driven Development needs a way to demonstrate cache performance: use mocking, etc.
+- Pluggable design can help clean seperation between app and this library e.g. adapter on network & file access classes.
+- Cache performance % can be measured by: cache-hit/total-requests or cache-miss/total-requests
+- Priority Heap as data structure, could help optimise dynamic re-shuffling of items based on 'cache priority index'. this optimisation, later, can be possible due to TDD.
+- cache is i/o bound thus concurrency is all welcome, to me implies, request queue (producer) and thread pool (consumers).
+
+*** measuring cache performance: (network cache specifically)    
+    make m repeat requests for n files, for each of n files, measure c1, c2, c3...cn, Where ci = cache-hit/total-requests. Then overall average cache performance C = (c1 + c2 + c3 ... cn) / n
+*** measure concurrency performance   
+    make n (say 1000) requests, measure time, should typically be n/100, atleast greater than n/c (where c is number of cores)
+*** partial file caching in dynamic network behavior (hi-speed to no-speed to dis-connected) (feature planned later)
+
+*** cache priority index algorithm - what to cache and when  
+**** predicting future need from past needs -
+***** greedy heuristics (the more it was required in past, the more it will be required in the future),
+***** machine learning / deep learning
+**** predicting future needs from observed pattern of applications
 
 
 ** Product Backlog Item
