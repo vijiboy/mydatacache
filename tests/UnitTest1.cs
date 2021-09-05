@@ -9,6 +9,7 @@ namespace tests
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Threading;
+    using System.Linq;
 
     public class Tests
     {
@@ -140,7 +141,39 @@ namespace tests
             Assert.True(TimeSpan.Compare(AsyncCallsTime.Elapsed, SyncCallsTime.Elapsed) == 1 );
         }
 
+        [Test]
+        public void Simulate_EndUserComputeActivity_WithAsynchronousNetwork_Fetch()
+        {
+            Task<int> ComputeIntensiveTask_findprimeNumbers = Task.Run(() => Enumerable.Range(2, 3000000).Count(n => Enumerable.Range(2, (int)Math.Sqrt(n) - 1).All(i => n % i > 0)));
+            string[] wikipediaUris = new string[] {"https://en.wikipedia.org/wiki/Timeline_of_historic_inventions", "https://en.wikipedia.org/wiki/History_of_aerospace", "https://en.wikipedia.org/wiki/History_of_artificial_intelligence",
+            "https://en.wikipedia.org/wiki/History_of_agriculture", "https://en.wikipedia.org/wiki/History_of_agricultural_science", "https://en.wikipedia.org/wiki/History_of_Biotechnology", "https://en.wikipedia.org/wiki/History_of_cartography", 
+            "https://en.wikipedia.org/wiki/History_of_chemical_engineering", "https://en.wikipedia.org/wiki/History_of_computing", "https://en.wikipedia.org/wiki/History_of_computing_hardware", "https://en.wikipedia.org/wiki/History_of_the_graphical_user_interface",
+            "https://en.wikipedia.org/wiki/Hypertext#History", "https://en.wikipedia.org/wiki/History_of_the_Internet", "https://en.wikipedia.org/wiki/History_of_the_World_Wide_Web", "https://en.wikipedia.org/wiki/History_of_operating_systems", "https://en.wikipedia.org/wiki/History_of_programming_languages",
+            "https://en.wikipedia.org/wiki/History_of_software_engineering", "https://en.wikipedia.org/wiki/History_of_electrical_engineering", "https://en.wikipedia.org/wiki/History_of_energy_development", "https://en.wikipedia.org/wiki/Engineering#History",
+            "https://en.wikipedia.org/wiki/History_of_industry", "https://en.wikipedia.org/wiki/History_of_library_and_information_science", "https://en.wikipedia.org/wiki/Timeline_of_microscope_technology", "https://en.wikipedia.org/wiki/History_of_manufacturing",
+            "https://en.wikipedia.org/wiki/History_of_materials_science"};
+            List<Uri> uriRequests = new List<Uri>(100);
+            Random next = new Random();
+            for (int i = 0; uriRequests.Count < uriRequests.Capacity; i++)
+            {
+                uriRequests.Add(new Uri(wikipediaUris[next.Next(0,wikipediaUris.Length)]));
+            }
+            List<Task<appiocache>> nwfetch = new List<Task<appiocache>>();
+            foreach (var uri in uriRequests)
+            {
+                nwfetch.Add(appiocache.fromUri(uri, cancelNever, BypassCache:true));
+            }
 
+            for (int i = 0; i < 500; i++)
+            {
+                Assert.AreEqual(216816, ComputeIntensiveTask_findprimeNumbers.Result);
+            }
+
+            foreach (var task in nwfetch)
+            {
+                task.Wait();
+            }
+            Assert.IsTrue(nwfetch.All(t => t.IsCompleted == true));
+        }
     }
-
 }
