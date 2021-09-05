@@ -18,8 +18,8 @@ namespace appiocache
 
         public appiocache(Uri uri, CancellationToken cancelFetch)
         {
-            var stringContent = client.GetStringAsync(uri, cancelFetch).Result;
-            dataStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringContent));
+            var byteContent = client.GetByteArrayAsync(uri, cancelFetch).Result;
+            dataStream = new MemoryStream(byteContent);
             Checksum = this.findHash();
         }
         static readonly HttpClient client = new HttpClient();

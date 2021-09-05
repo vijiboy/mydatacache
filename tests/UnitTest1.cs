@@ -30,11 +30,13 @@ namespace tests
         }
 
         [Test]
-        [Ignore("TODO checksum does not match exactly as last few bytes are updated by anti-virus program")]
         public void dataCache_From_NetworkResource()
         {
-            var fromUri = new appiocache(new System.Uri(@"https://www.ietf.org/about/who/"), new System.Threading.CancellationToken());
-            fromUri.persistToDisk("fromUri.html");
+            var fromStaticUri = new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
+            var tempclient = new HttpClient();
+            var fromDownloadedBytes = new appiocache(tempclient.GetByteArrayAsync("https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png").Result);
+            Assert.AreEqual(fromDownloadedBytes.Checksum, fromStaticUri.Checksum);
+            tempclient.Dispose();
         }
 
 
