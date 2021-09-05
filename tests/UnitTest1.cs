@@ -9,9 +9,17 @@ namespace tests
 
     public class Tests
     {
-        [SetUp]
-        public void Setup()
+        static HttpClient tempclient;
+        [OneTimeSetUp]
+        public static void Setup()
         {
+            tempclient = new HttpClient();
+        }
+
+        [OneTimeTearDown]
+        public static void TearDown()
+        {
+            tempclient.Dispose();
         }
 
         [Test]
@@ -32,19 +40,17 @@ namespace tests
         [Test]
         public void dataCache_From_NetworkResource()
         {
-            var fromStaticUri = new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
-            var tempclient = new HttpClient();
+            var fromStaticUri = new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
             var fromDownloadedBytes = new appiocache(tempclient.GetByteArrayAsync("https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png").Result);
             Assert.AreEqual(fromDownloadedBytes.Checksum, fromStaticUri.Checksum);
-            tempclient.Dispose();
         }
 
 
         [Test]
         public void dataCache_Asynchrnous_From_NetworkResource()
         {
-            var asyncDataRequest = appiocache.fromUri(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
-            var syncData= new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
+            var asyncDataRequest = appiocache.fromUri(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
+            var syncData= new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
             asyncDataRequest.Wait();
             Assert.AreEqual(asyncDataRequest.Result.Checksum, syncData.Checksum);
         }

@@ -9,7 +9,7 @@ namespace appiocache
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class appiocache: IDisposable
+    public class appiocache : IDisposable
     {
         public appiocache(byte[] vs)
         {
@@ -17,20 +17,20 @@ namespace appiocache
             Checksum = this.findHash();
         }
 
-        public appiocache(Uri uri, CancellationToken cancelFetch)
+        public appiocache(Uri uri, CancellationToken? cancelFetch=null)
         {
-            //var byteContent = client.GetByteArrayAsync(uri, cancelFetch).Result;
-            var byteContent = client.GetByteArrayAsync(uri, cancelFetch).Result;
+            var byteContent = (cancelFetch.HasValue) ? client.GetByteArrayAsync(uri, cancelFetch.Value).Result : client.GetByteArrayAsync(uri).Result;
             dataStream = new MemoryStream(byteContent);
             Checksum = this.findHash();
         }
         static readonly HttpClient client = new HttpClient();
 
-        public string Checksum { get;  private set;}
+        public string Checksum { get; private set; }
         private MemoryStream dataStream;
         private bool disposedValue;
 
-        private string findHash(){
+        private string findHash()
+        {
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] hashbytes = sha256.ComputeHash(dataStream.ToArray());
@@ -66,9 +66,9 @@ namespace appiocache
             }
         }
 
-        public static async Task<appiocache> fromUri(Uri uri, CancellationToken cancellationToken)
+        public static async Task<appiocache> fromUri(Uri uri, CancellationToken? cancellationToken = null)
         {
-            var byteContent = await client.GetByteArrayAsync(uri, cancellationToken);
+            var byteContent = (cancellationToken.HasValue) ? await client.GetByteArrayAsync(uri, cancellationToken.Value) : await client.GetByteArrayAsync(uri);
             return new appiocache(byteContent);
         }
 
