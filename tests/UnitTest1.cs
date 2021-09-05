@@ -41,12 +41,12 @@ namespace tests
 
 
         [Test]
-        [Ignore("TODO")]
-        public void uri_synchronous_api()
+        public void dataCache_Asynchrnous_From_NetworkResource()
         {
-            //var a = new appiocache();
-            //file myfile = fetchUrl("http://myserver.com/file1.img");
-            //Assert.AreEqual(myfile.checksum, a.geturi("http://myserver.com/file1.img").checksum);
+            var asyncDataRequest = appiocache.fromUri(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
+            var syncData= new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"), new System.Threading.CancellationToken());
+            asyncDataRequest.Wait();
+            Assert.AreEqual(asyncDataRequest.Result.Checksum, syncData.Checksum);
         }
     }
 }

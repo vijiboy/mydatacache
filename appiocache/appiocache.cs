@@ -7,6 +7,7 @@ namespace appiocache
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
 
     public class appiocache: IDisposable
     {
@@ -18,6 +19,7 @@ namespace appiocache
 
         public appiocache(Uri uri, CancellationToken cancelFetch)
         {
+            //var byteContent = client.GetByteArrayAsync(uri, cancelFetch).Result;
             var byteContent = client.GetByteArrayAsync(uri, cancelFetch).Result;
             dataStream = new MemoryStream(byteContent);
             Checksum = this.findHash();
@@ -62,6 +64,12 @@ namespace appiocache
                 // TODO: set large fields to null
                 disposedValue = true;
             }
+        }
+
+        public static async Task<appiocache> fromUri(Uri uri, CancellationToken cancellationToken)
+        {
+            var byteContent = await client.GetByteArrayAsync(uri, cancellationToken);
+            return new appiocache(byteContent);
         }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
