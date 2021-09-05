@@ -14,20 +14,21 @@ namespace appiocache
         public appiocache(byte[] vs)
         {
             dataStream = new MemoryStream(vs);
-            Checksum = this.findHash();
         }
-
         public appiocache(Uri uri, CancellationToken? cancelFetch=null)
         {
             var byteContent = (cancelFetch.HasValue) ? client.GetByteArrayAsync(uri, cancelFetch.Value).Result : client.GetByteArrayAsync(uri).Result;
             dataStream = new MemoryStream(byteContent);
-            Checksum = this.findHash();
         }
-        static readonly HttpClient client = new HttpClient();
+        public static async Task<appiocache> fromUri(Uri uri, CancellationToken? cancellationToken = null)
+        {
+            var byteContent = (cancellationToken.HasValue) ? await client.GetByteArrayAsync(uri, cancellationToken.Value) : await client.GetByteArrayAsync(uri);
+            return new appiocache(byteContent);
+        }
 
-        public string Checksum { get; private set; }
-        private MemoryStream dataStream;
-        private bool disposedValue;
+        private static readonly HttpClient client = new HttpClient(); // singleton to support recommended reuse
+        public string Checksum { get {return this.findHash();} } // hash (sha256) helps uniquely & easily identify the data bytes
+        private MemoryStream dataStream; // data is viewed as in-memory stream, feeded by network, persisted to disk, etc
 
         private string findHash()
         {
@@ -51,6 +52,7 @@ namespace appiocache
             }
         }
 
+        private bool disposedValue;
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -66,11 +68,6 @@ namespace appiocache
             }
         }
 
-        public static async Task<appiocache> fromUri(Uri uri, CancellationToken? cancellationToken = null)
-        {
-            var byteContent = (cancellationToken.HasValue) ? await client.GetByteArrayAsync(uri, cancellationToken.Value) : await client.GetByteArrayAsync(uri);
-            return new appiocache(byteContent);
-        }
 
         // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
         // ~appiocache()
