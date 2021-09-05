@@ -23,8 +23,12 @@ This opportunity of optimising high volume read/write using advanced caching wil
 
 *** measuring cache performance: (network cache specifically)    
     make m repeat requests for n files, for each of n files, measure c1, c2, c3...cn, Where ci = cache-hit/total-requests. Then overall average cache performance C = (c1 + c2 + c3 ... cn) / n
+
+
 *** measure concurrency performance   
     make n (say 1000) requests, measure time, should typically be n/100, atleast greater than n/c (where c is number of cores)
+
+
 *** partial file caching in dynamic network behavior (hi-speed to no-speed to dis-connected) (feature planned later)
 
 *** cache priority index algorithm - what to cache and when  
