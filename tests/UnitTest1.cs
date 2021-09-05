@@ -5,7 +5,9 @@ namespace tests
     using appiocache;
     using System.IO;
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
+    using System.Threading.Tasks;
 
     public class Tests
     {
@@ -38,21 +40,46 @@ namespace tests
         }
 
         [Test]
-        public void dataCache_From_NetworkResource()
+        public void dataCache_From_NetworkResource_Synchronous()
         {
             var fromStaticUri = new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
             var fromDownloadedBytes = new appiocache(tempclient.GetByteArrayAsync("https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png").Result);
             Assert.AreEqual(fromDownloadedBytes.Checksum, fromStaticUri.Checksum);
         }
 
-
         [Test]
-        public void dataCache_Asynchrnous_From_NetworkResource()
+        public void dataCache_From_NetworkResource_Asynchronous()
         {
             var asyncDataRequest = appiocache.fromUri(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
             var syncData= new appiocache(new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png"));
             asyncDataRequest.Wait();
             Assert.AreEqual(asyncDataRequest.Result.Checksum, syncData.Checksum);
+        }
+
+        [Test]
+        public void dataCache_AsynchronousIO_Is_Faster()
+        {
+            var sameUri = new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png");
+            List<Task<appiocache>> asyncTasks = new List<Task<appiocache>>();
+            List<appiocache> syncResults = new List<appiocache>();
+            const int TotalCalls = 200;
+            var AsyncCallsTime = System.Diagnostics.Stopwatch.StartNew(); 
+            for (int i = 0; i < TotalCalls; i++)
+                asyncTasks.Add(appiocache.fromUri(sameUri));
+            for (int i = 0; i < TotalCalls; i++)
+                asyncTasks[i].Wait();
+            AsyncCallsTime.Stop();
+
+            var SyncCallsTime = System.Diagnostics.Stopwatch.StartNew(); 
+            for (int i = 0; i < TotalCalls; i++)
+                syncResults.Add(new appiocache(sameUri));
+            SyncCallsTime.Stop();
+
+            for (int i = 0; i < TotalCalls; i++)
+                Assert.AreEqual(asyncTasks[i].Result.Checksum, syncResults[i].Checksum);
+
+            Console.WriteLine($"Total Calls {TotalCalls}, AsyncCalls Time: {AsyncCallsTime.Elapsed.TotalSeconds.ToString()}, SyncCalls Time: {SyncCallsTime.Elapsed.TotalSeconds.ToString()}");
+            Assert.True(TimeSpan.Compare(AsyncCallsTime.Elapsed, SyncCallsTime.Elapsed) == -1 );
         }
     }
 }
