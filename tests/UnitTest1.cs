@@ -13,7 +13,7 @@ namespace tests
 
     public class Tests
     {
-        static readonly Uri staticUri = new System.Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png");
+        static readonly Uri staticUri = new Uri(@"https://raw.githubusercontent.com/vijiboy/declarative-camera/master/images/toolbutton.png");
         static readonly CancellationToken cancelledAlready = new CancellationToken(canceled: true);
         static readonly CancellationToken cancelNever = new CancellationToken(canceled: false);
         static HttpClient tempclient;
@@ -32,16 +32,16 @@ namespace tests
         [Test]
         public void dataCache_FromBytes_ChecksumVerified()
         {
-            Assert.IsTrue(string.Equals(new appiocache(new byte[] {0xff,0xff}).Checksum, 
+            Assert.IsTrue(string.Equals(new appiocache("sample1", new byte[] {0xff,0xff}).Checksum, 
             "CA2FD00FA001190744C15C317643AB092E7048CE086A243E2BE9437C898DE1BB", System.StringComparison.OrdinalIgnoreCase));
-            Assert.IsTrue(string.Equals(new appiocache(System.Text.Encoding.UTF8.GetBytes("Hello World!")).Checksum, 
+            Assert.IsTrue(string.Equals(new appiocache("sample2", System.Text.Encoding.UTF8.GetBytes("Hello World!")).Checksum, 
             "7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069", System.StringComparison.OrdinalIgnoreCase));
         }
 
         [Test]
         public void dataCache_Can_PersistTo_Disk()
         {
-            var a = new appiocache(System.Text.Encoding.UTF8.GetBytes("Hello World!"));
+            var a = new appiocache("HelloWorld", System.Text.Encoding.UTF8.GetBytes("Hello World!"));
              a.persistToDisk(@"mytest.txt");
              Assert.AreEqual(File.ReadAllText(@"mytest.txt"), "Hello World!");
         }
@@ -49,8 +49,10 @@ namespace tests
         [Test]
         public void dataCache_From_NetworkResource_Synchronous()
         {
-            var fromStaticUri = appiocache.fromUri(staticUri).Result;
-            var fromDownloadedBytes = new appiocache(tempclient.GetByteArrayAsync(staticUri).Result);
+            var newUri = new System.Uri(@"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Papio_anubis_%28Serengeti%2C_2009%29.jpg/200px-Papio_anubis_%28Serengeti%2C_2009%29.jpg");
+            //var fromStaticUri = appiocache.fromUri(staticUri).Result;
+            var fromStaticUri = appiocache.fromUri(newUri).Result;
+            var fromDownloadedBytes = new appiocache(newUri.ToString(), tempclient.GetByteArrayAsync(newUri).Result);
             Assert.AreEqual(fromDownloadedBytes.Checksum, fromStaticUri.Checksum);
         }
 

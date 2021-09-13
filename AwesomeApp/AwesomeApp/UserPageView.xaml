@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:AwesomeApp"
+             x:Class="AwesomeApp.UsersPageView">
+    <ContentPage.BindingContext>
+        <local:UserPageViewModel/>
+    </ContentPage.BindingContext>
+
+    <StackLayout Margin="10,15,10,10">
+        <Button Text="Add more..." Command="{Binding AddMoreEntriesCommand}"/>
+        <Button Text="Clear" Command="{Binding ClearAllEntriesCommand}"/>
+        <Label Text="{Binding Monkeys.Count}"/>
+        <CollectionView ItemsSource="{Binding Monkeys}"
+                        SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10"
+                  RowDefinitions="Auto, *"
+                  ColumnDefinitions="Auto, *">
+                            <Image Grid.RowSpan="2"
+                       Source="{Binding ImgSource}"
+                       Aspect="AspectFill"
+                       HeightRequest="60"
+                       WidthRequest="60" />
+                            <Label Grid.Column="1"
+                       Text="{Binding Name}"
+                       FontAttributes="Bold" />
+                            <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Text="{Binding Location}"
+                       VerticalOptions="End" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+    </StackLayout>
+</ContentPage>
