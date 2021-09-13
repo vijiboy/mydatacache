@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -15,8 +16,19 @@ namespace AwesomeApp
         public UserPageViewModel()
         {
             Monkeys = new ObservableCollection<Monkey>();
+            Monkeys.CollectionChanged += Monkeys_CollectionChanged;
             AddMoreEntriesCommand = new Command(AddMoreEntries);
             ClearAllEntriesCommand = new Command(ClearAllEntries);
+        }
+
+        private void Monkeys_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems == null) 
+                return;
+            Parallel.For(0,e.NewItems.Count, i =>
+              {
+                  ((Monkey)e.NewItems[i]).updateImageSourceAsync();
+              });
         }
 
         private void ClearAllEntries(object obj)

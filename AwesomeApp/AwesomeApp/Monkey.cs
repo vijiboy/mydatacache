@@ -8,13 +8,14 @@
     using System.IO;
     using System.Threading.Tasks;
     using System.ComponentModel;
+    using System.Runtime.CompilerServices;
 
     public class Monkey: INotifyPropertyChanged
     {
-        //appiocache emptyImage = 
+        
         public string Name { get; set; }
         public string Location { get; set; }
-        private string imageurl = "";
+        private string imageurl = "https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif";
         public string ImageUrl
         {
             get { return imageurl; } 
@@ -23,23 +24,31 @@
                 if (!string.IsNullOrEmpty(value) && imageurl != value)
                 {
                     imageurl = value;
-                    cachedImg = appiocache.fromUri(new Uri(value)).Result;
+                    //updateImageSourceAsync();
                 }
             }
         }
-        
-        private ImageSource imgsource;
-        private appiocache cachedImg = null; // TODO 1: assign default image
 
         public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal async void updateImageSourceAsync()
+        {
+            //cachedImg = await appiocache.fromUri(new Uri(imageurl), null, BypassCache: true);
+            cachedImg = await appiocache.fromUri(new Uri(imageurl), null, BypassCache: false);
+            NotifyPropertyChanged("ImgSource");
+        }
+
+        private appiocache cachedImg = appiocache.fromUri(new Uri(@"https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"), null, BypassCache: false).Result;
 
         public ImageSource ImgSource
         {
             get
-            { 
-                if(cachedImg!=null) // TODO 1: assign default image
-                    return ImageSource.FromStream(cachedImg.createStream);
-                return null;
+            {
+                return ImageSource.FromStream(cachedImg.createStream);                
             }            
         } 
 

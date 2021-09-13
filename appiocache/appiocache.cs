@@ -4,6 +4,7 @@ namespace appiocache
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net.Http;
     using System.Security.Cryptography;
     using System.Text;
@@ -35,6 +36,11 @@ namespace appiocache
             catch (TaskCanceledException)
             {
                 return null;
+            }
+            catch(System.AggregateException aex)
+            {
+                //if (aex.InnerExceptions.Count > 1 && aex.InnerExceptions.Any(e => e.Message.Contains("Java.Unknown.HostExcepton")))
+                    return null;
             }
 
             return new appiocache(uri.ToString(), byteContent, BypassCache);
