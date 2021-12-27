@@ -1,5 +1,5 @@
-* DataCache project
-Project for data caching/optimising for web apps from client side
+* client side data caching / optimising
+Data caching / optimisation for web apps from client side. Using Test Driven Development.
   
 ** Analysis
 Cache Optimisation depends on multiple levels. 
